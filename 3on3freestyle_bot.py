@@ -21,6 +21,8 @@ client = discord.Client()
 token ="your bot token"
 
 #const========================
+URL_RANK ='http://3on3rank.fsgames.com/rank'
+URL_DETAIL = 'http://3on3rank.fsgames.com/rank/detail'
 CONST_AVG_RATE = 10000
 CONST_WIN_RATE = 100
 EMBED_FRAME_COLOR = 0xff8080
@@ -144,11 +146,11 @@ def getBasic_apiData(url, params):
     res_data = api_call(url, params)
     
     try:
-        sn = res_data['data'][0] #get crew_sn on data param
+        data = res_data['data'][0] #get crew_sn on data param
     except KeyError: # if no search user id, return none
         return None
 
-    return sn
+    return data
 #============================================================
 def api_call(url, params):
     res = requests.post(url, data = params) #request Post
@@ -156,21 +158,17 @@ def api_call(url, params):
     return res_data
 #============================================================
 def getUser_info(user_id):
-    url = 'http://3on3rank.fsgames.com/rank' #request URL
-
     #request user info on basic user param
     params = {
         'type' : 1,
         'searchValue': user_id
     }
     #api call
-    user_info = getBasic_apiData(url, params)
+    user_info = getBasic_apiData(URL_RANK, params)
 
     return user_info
 
 def getUser_score(user_sn):
-    url = 'http://3on3rank.fsgames.com/rank/detail' #request Detail user info URL
-
     #request detail user info on basic user param
     params = {
         'type' : 2,
@@ -178,47 +176,41 @@ def getUser_score(user_sn):
         }
 
     #api call
-    res_data = api_call(url, params)
+    res_data = api_call(URL_DETAIL, params)
     user_score = res_data['data'][0] #filter param in 'data'
 
     return user_score
 #============================================================
 def getCrew_info(crew_id):
-    url ='http://3on3rank.fsgames.com/rank'
-
     #request crew info on basic crew param
     params = {
         'type' : 4,
         'searchValue': crew_id
     }
     #api call
-    crew_info = getBasic_apiData(url, params)
+    crew_info = getBasic_apiData(URL_RANK, params)
 
     return crew_info
 
 def getCrew_score(crew_sn):
-    url = 'http://3on3rank.fsgames.com/rank/detail'
-    
     params = {
         'type' : 5,
         'crewSN' : crew_sn
         }
     
     #api call
-    res_data = api_call(url, params)
+    res_data = api_call(URL_DETAIL, params)
     user_score = res_data['data'] #filter param in 'data'
     return user_score
 
 def getCrew_members(crew_sn):
-    url = "http://3on3rank.fsgames.com/rank/detail"
-    
     params = {
         'type' : 8,
         'crewSN' : crew_sn,
         'curPage' : 1
         }
         
-    res_data = api_call(url, params)
+    res_data = api_call(URL_DETAIL, params)
     
     totalCount = res_data['totalCount']
 
@@ -231,7 +223,7 @@ def getCrew_members(crew_sn):
             'curPage' : i
         }
         #api call
-        res_data = api_call(url, params)
+        res_data = api_call(URL_DETAIL, params)
         for j in res_data['data']:
             member_list.append(j)
 
