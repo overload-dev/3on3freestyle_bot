@@ -12,11 +12,12 @@ def getUser_info(user_id):
 
     return user_info
 
-def getUser_score(user_sn):
+def getUser_score(user_sn, scoreType):
     #request detail user info on basic user param
     params = {
         'type' : con.TYPE_USER_SCORE,
-        'userSN' : user_sn
+        'userSN' : user_sn,
+        'period' : scoreType
         }
 
     #api call

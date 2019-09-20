@@ -1,15 +1,27 @@
-TOKEN ="your token"
+TOKEN ="NjIzNTI4OTE2OTE2NzY0NzEy.XYNtxQ.K4QI8bPZGAjaQBGlAFtaMP63yTM"
 
 URL_RANK ='http://3on3rank.fsgames.com/rank'
 URL_DETAIL = 'http://3on3rank.fsgames.com/rank/detail'
 
 TYPE_USER_INFO = int(1)
+
 TYPE_USER_SCORE = int(2)
 TYPE_USER_MATCH_LOG = int(3)
 TYPE_CREW_INFO = int(4)
 TYPE_CREW_SCORE = int(5)
 TYPE_CREW_MATCH_LOG = int(7)
 
+USER_SCORE_COMMAND = { # number is api's period value (period)
+    1 : {'COMMAND' : '!score_t ', 'SCRIPT' : 'TOTAL'}, #SCORE_TOTAL
+    2 : {'COMMAND' : '!score_n ', 'SCRIPT' : 'Now Session'}, #SCORE_NOW
+    3 : {'COMMAND' : '!score_p ', 'SCRIPT' : 'Past Session'} #SCORE_PAST
+}
+
+CREW_SCORE_COMMAND = { # number is api's period value (period)
+    1 : {'COMMAND' : '!crew_score_t ', 'SCRIPT' : 'TOTAL'}, #SCORE_TOTAL
+    2 : {'COMMAND' : '!crew_score_n ', 'SCRIPT' : 'Now Session'}, #SCORE_NOW
+    3 : {'COMMAND' : '!crew_score_p ', 'SCRIPT' : 'Past Session'} #SCORE_PAST
+}
 
 MATCH ={
     0 : 'LOSE',

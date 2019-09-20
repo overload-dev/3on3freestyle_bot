@@ -58,12 +58,20 @@ async def on_message(message):
             await message.channel.send(embed=embed)
         
         if msg.find('!help') == 0:
-            
             writeStr = ''
-            writeStr += '`!score [user name]` - Users Score Search\n\n'
+            writeStr += '**[User Command]**\n'
+            writeStr += '`!score_t [user name]` - Users Total Score Search\n'
+            writeStr += '`!score_n [user name]` - Users Now Session Score Search\n'
+            writeStr += '`!score_p [user name]` - Users Past Session Score Search\n'
             writeStr += '`!matchlog [user name]` - Users Match Log Search\n\n'
-            writeStr += '`!crew_score [crew name]` - Crew Total Score Search\n\n'
+
+            writeStr += '**[Crew Command]**\n'
+            writeStr += '`!crew_score_t [crew name]` - Crew Total Score Search\n'
+            writeStr += '`!crew_score_n [crew name]` - Crew Now Session Score Search\n'
+            writeStr += '`!crew_score_p [crew name]` - Crew Past Session Score Search\n'
             writeStr += '`!crew_members [crew name]` - Crew Member List Search\n\n'
+
+            writeStr += '**[Other]**\n'
             writeStr += '`!saikoro` - ????\n\n'
             
             embed = discord.Embed(title = "Ruby Style Guids :smile: ", color = EMBED_FRAME_COLOR)
@@ -76,32 +84,21 @@ async def on_message(message):
             rndNum = random.randrange(0,6)
             await message.channel.send(message.channel, embed = discord.Embed(title = 'Your Number is...', description = ':game_die: ' + sai[rndNum]))
 
-        if msg.find('!score ') == 0:
-            user_id = msg.replace('!score ','') #filter input user id
-            common.on_message_log(message, '!score') # log print...
-            user_info = user.getUser_info(user_id) # request user_sn on 3on3rank site
+        #========== user score ==========
+        if msg.find('!score') == 0:
+            for usc in con.USER_SCORE_COMMAND:
+                if msg.find(con.USER_SCORE_COMMAND[usc]['COMMAND']) == 0:
+                    user_id = msg.replace(con.USER_SCORE_COMMAND[usc]['COMMAND'], '') #filter input user id
+                    common.on_message_log(message, con.USER_SCORE_COMMAND[usc]['COMMAND']) # log print...
+                    user_info = user.getUser_info(user_id) # request user_sn on 3on3rank site
 
-            if user_info != None: # if successful search user id...
-                user_score = user.getUser_score(user_info['USER_SN']) # request user 3on3 freestyle socre info
-                
-                #create embed text.....
-                embed = discord.Embed(title=user_id +"'s Info... :sunglasses:", color=EMBED_FRAME_COLOR)
-                embed.add_field(name = "WIN_COUNT", value = user_score['WIN_COUNT'], inline = True)
-                embed.add_field(name = "WIN_RATE", value = str(round(float(user_score['WIN_RATE'] / CONST_WIN_RATE), 1)) +" %", inline = True)
-                embed.add_field(name = "PLAY_COUNT", value = user_score['PLAY_COUNT'], inline = True)
-                embed.add_field(name = "AVG_SCORE", value = str(round(float(user_score['AVG_SCORE'] / CONST_AVG_RATE), 1)) + " %", inline = True)
-                embed.add_field(name = "AVG_REBOUND", value = str(round(float(user_score['AVG_REBOUND'] / CONST_AVG_RATE), 1)) + " %", inline = True)
-                embed.add_field(name = "AVG_BLOCK", value = str(round(float(user_score['AVG_BLOCK'] / CONST_AVG_RATE), 1)) + " %", inline = True)
-                embed.add_field(name = "AVG_STEAL", value = str(round(float(user_score['AVG_STEAL'] / CONST_AVG_RATE), 1)) + " %", inline = True)
-                embed.add_field(name = "AVG_ASSIST", value = str(round(float(user_score['AVG_ASSIST'] / CONST_AVG_RATE), 1)) + " %", inline = True)
-                embed.add_field(name = "AVG_LOOSEBALL", value = str(round(float(user_score['AVG_LOOSEBALL'] / CONST_AVG_RATE),1)) + " %", inline = True)
-                #create embed text.....
-
-            else: #if no search user_sn
-                #return fail message
-                embed = discord.Embed(title = "Sorry I can't Find User Information! :grimacing:", description="Check The User ID", color = EMBED_FRAME_COLOR)
-
-            await message.channel.send(embed=embed)
+                    if user_info != None: # if successful search user id...
+                        embed = user_score_script_create(user_id, user.getUser_score(user_info['USER_SN'], usc), usc)# request user 3on3 freestyle socre info
+                    else: #if no search user_sn
+                        embed = discord.Embed(title = "Sorry I can't Find User Information! :grimacing:", description="Check The User ID", color = EMBED_FRAME_COLOR)
+                    await message.channel.send(embed=embed)
+                    break
+        #========== user score ==========
         if msg.find('!matchlog') == 0:
             user_id = msg.replace('!matchlog ','') #filter input user id
             common.on_message_log(message, '!matchlog') # log print...
@@ -116,34 +113,34 @@ async def on_message(message):
                 con.CHARACTER[logs['CHARACTER_CODE1']]['CHARACTER'],
                 con.CHARACTER[logs['CHARACTER_CODE2']]['CHARACTER'],
                 con.CHARACTER[logs['CHARACTER_CODE3']]['CHARACTER'],
-                con.CHARACTER[logs['CHARACTER_CODE4']]['CHARACTER']] for logs in match_log
-                ]
+                con.CHARACTER[logs['CHARACTER_CODE4']]['CHARACTER']] for logs in match_log]
 
                 table = tabulate(rows, tablefmt = "fancy_grid", headers = headers)
                 writeStr = '```\n'+ table + '\n```'
-
                 await message.channel.send('**' + user_id +"'s Match Log... :sunglasses:" + '**\n\n' + writeStr)
-                
-        if msg.find('!crew_score ') == 0:
-            crew_id = msg.replace('!crew_score', '')
-            common.on_message_log(message, '!crew_score') # log print...
-            crew_info = crew.getCrew_info(crew_id)
+        
+        #========== crew score ==========
+        if msg.find('!crew_score') == 0:
+            for csc in con.CREW_SCORE_COMMAND:
+                if msg.find(con.CREW_SCORE_COMMAND[csc]['COMMAND']) == 0:
+                    crew_id = msg.replace(con.CREW_SCORE_COMMAND[csc]['COMMAND'], '')
+                    common.on_message_log(message, con.CREW_SCORE_COMMAND[csc]['COMMAND']) # log print...
+                    crew_info = crew.getCrew_info(crew_id)
 
-            if crew_info != None:
-                crew_score = crew.getCrew_score(crew_info['CREW_SN'])
-                
-                basic_profile = "Rank : "+ str(crew_score['CREW_SUM_SCORE_RANK'])  + ' (' + str(crew_info['RANK_UPDOWN']) + ')' + "\t/\tMembers : " + str(crew_score['CREW_MEMBER_COUNT'])
+                    if crew_info != None:
+                        crew_score = crew.getCrew_score(crew_info['CREW_SN'], csc)
 
-                embed = discord.Embed(title = crew_id + " Crew Info... :sunglasses:", description = basic_profile, color = EMBED_FRAME_COLOR)
-                embed.add_field(name = "Total Score", value = crew_score['CREW_SUM_SCORE'], inline = True)
-                embed.add_field(name = "Match Score", value = crew_score['CREW_MATCH_SCORE'], inline = True)
-                embed.add_field(name = "Attendance Score", value = crew_score['CREW_ATTENDANCE_SCORE'], inline = True)
-                embed.add_field(name = "Posting Score", value = crew_score['CREW_POSTING_SCORE'], inline = True)
+                        if csc == 2:
+                            basic_profile = "Rank : "+ str(crew_score['CREW_SUM_SCORE_RANK'])  + ' (' + str(crew_info['RANK_UPDOWN']) + ')' + "\t/\tMembers : " + str(crew_score['CREW_MEMBER_COUNT'])
+                        else:
+                            basic_profile = "Rank : "+ str(crew_score['CREW_SUM_SCORE_RANK'])  + "\t/\tMembers : " + str(crew_score['CREW_MEMBER_COUNT'])
 
-            else:
-                embed = discord.Embed(title = "Sorry I can't Find Crew Information! :grimacing:", description="Check The Crew ID", color = EMBED_FRAME_COLOR)
-
-            await message.channel.send(embed=embed)
+                        embed = crew_score_script_create(crew_id, crew_score, basic_profile, csc)# request user 3on3 freestyle socre info
+                    else:
+                        embed = discord.Embed(title = "Sorry I can't Find Crew Information! :grimacing:", description="Check The Crew ID", color = EMBED_FRAME_COLOR)
+        
+                    await message.channel.send(embed=embed)
+        #========== crew score ==========
 
         if msg.find('!crew_members') == 0:
             crew_id = msg.replace('!crew_members', '')
@@ -152,7 +149,6 @@ async def on_message(message):
 
             if crew_info != None:
                 member_list, totalCount = crew.getCrew_members(crew_info['CREW_SN'])
-
                 embed = discord.Embed(title = crew_id + " Crew Member List... :sunglasses:", color = EMBED_FRAME_COLOR)
                 
                 headers=['#', 'Member Name']
@@ -165,5 +161,28 @@ async def on_message(message):
             else:
                 embed = discord.Embed(title = "Sorry I can't Find Crew Information! :grimacing:", description="Check The Crew ID", color = EMBED_FRAME_COLOR)
                 await message.channel.send(embed=embed)
+
+#Write Chat Script Functions
+def user_score_script_create(user_id, user_score, usc):
+    embed = discord.Embed(title=user_id +"'s [" + con.USER_SCORE_COMMAND[usc]['SCRIPT'] +"] Score.... :sunglasses:", color=EMBED_FRAME_COLOR)
+    embed.add_field(name = "Win Count", value = user_score['WIN_COUNT'], inline = True)
+    embed.add_field(name = "Win Rate", value = str(round(float(user_score['WIN_RATE'] / CONST_WIN_RATE), 1)) +" %", inline = True)
+    embed.add_field(name = "Play Count", value = user_score['PLAY_COUNT'], inline = True)
+    embed.add_field(name = "AVG Score", value = str(round(float(user_score['AVG_SCORE'] / CONST_AVG_RATE), 1)) + " %", inline = True)
+    embed.add_field(name = "AVG Rebound", value = str(round(float(user_score['AVG_REBOUND'] / CONST_AVG_RATE), 1)) + " %", inline = True)
+    embed.add_field(name = "AVG Block", value = str(round(float(user_score['AVG_BLOCK'] / CONST_AVG_RATE), 1)) + " %", inline = True)
+    embed.add_field(name = "AVG Steal", value = str(round(float(user_score['AVG_STEAL'] / CONST_AVG_RATE), 1)) + " %", inline = True)
+    embed.add_field(name = "AVG Assist", value = str(round(float(user_score['AVG_ASSIST'] / CONST_AVG_RATE), 1)) + " %", inline = True)
+    embed.add_field(name = "AVG LoosBall", value = str(round(float(user_score['AVG_LOOSEBALL'] / CONST_AVG_RATE),1)) + " %", inline = True)
+    #create embed text.....
+    return embed
+
+def crew_score_script_create(crew_id, crew_score, basic_profile, csc):
+    embed = discord.Embed(title = crew_id + " Crew ["+ con.CREW_SCORE_COMMAND[csc]['SCRIPT'] + "] Score... :sunglasses:", description = basic_profile, color = EMBED_FRAME_COLOR)
+    embed.add_field(name = "Total Score", value = crew_score['CREW_SUM_SCORE'], inline = True)
+    embed.add_field(name = "Match Score", value = crew_score['CREW_MATCH_SCORE'], inline = True)
+    embed.add_field(name = "Attendance Score", value = crew_score['CREW_ATTENDANCE_SCORE'], inline = True)
+    embed.add_field(name = "Posting Score", value = crew_score['CREW_POSTING_SCORE'], inline = True)
+    return embed
 
 client.run(con.TOKEN)

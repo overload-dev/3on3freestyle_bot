@@ -12,10 +12,11 @@ def getCrew_info(crew_id):
     crew_info = common.getBasic_apiData(con.URL_RANK, params)
     return crew_info
 
-def getCrew_score(crew_sn):
+def getCrew_score(crew_sn, scoreType):
     params = {
         'type' : con.TYPE_CREW_SCORE,
-        'crewSN' : crew_sn
+        'crewSN' : crew_sn,
+        'period' : scoreType
         }
     #api call
     res_data = common.api_call(con.URL_DETAIL, params)
