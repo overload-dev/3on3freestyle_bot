@@ -1,4 +1,4 @@
-TOKEN ="NjIzNTI4OTE2OTE2NzY0NzEy.XYNtxQ.K4QI8bPZGAjaQBGlAFtaMP63yTM"
+TOKEN ="Your Token"
 
 URL_RANK ='http://3on3rank.fsgames.com/rank'
 URL_DETAIL = 'http://3on3rank.fsgames.com/rank/detail'
