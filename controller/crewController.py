@@ -6,7 +6,7 @@ def getCrew_info(crew_id):
     #request crew info on basic crew param
     params = {
         'type' : con.TYPE_CREW_INFO,
-        'searchValue': crew_id
+        'searchValue' : crew_id
     }
     #api call
     crew_info = common.getBasic_apiData(con.URL_RANK, params)
@@ -34,7 +34,7 @@ def getCrew_matchLog(crew_sn):
 
 def getCrew_members(crew_sn):
     params = {
-        'type' : 8,
+        'type' : con.TYPE_CREW_MEMBER,
         'crewSN' : crew_sn,
         'curPage' : 1
         }
@@ -45,7 +45,7 @@ def getCrew_members(crew_sn):
 
     for i in range(2, endPage + 1):
         params = {
-            'type' : 8,
+            'type' : con.TYPE_CREW_MEMBER,
             'crewSN' : crew_sn,
             'curPage' : i
         }

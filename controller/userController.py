@@ -5,7 +5,7 @@ def getUser_info(user_id):
     #request user info on basic user param
     params = {
         'type' : con.TYPE_USER_INFO,
-        'searchValue': user_id
+        'searchValue' : user_id
     }
     #api call
     user_info = common.getBasic_apiData(con.URL_RANK, params)
