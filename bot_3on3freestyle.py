@@ -71,6 +71,7 @@ async def on_message(message):
             writeStr += '`!crew_score_n [crew name]` - Crew Now Session Score Search\n'
             writeStr += '`!crew_score_p [crew name]` - Crew Past Session Score Search\n'
             writeStr += '`!crew_members [crew name]` - Crew Member List Search\n\n'
+            writeStr += '`!crew_matchlog [crew name]` - Crew Member Match Log Search\n\n'
 
             writeStr += '**[Other]**\n'
             writeStr += '`!saikoro` - ????\n\n'
