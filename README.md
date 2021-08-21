@@ -9,7 +9,7 @@ Detailed information required for the development of Discord Bot can be found in
 <https://discord.com/developers/docs/intro/></br>
 * * *
 ## 2. Git Repository Download
-<pre><code>git clone https://github.com/leekanghyo/3on3freestyle_bot.git</code></pre>
+<pre><code>git clone https://github.com/overload-dev/3on3freestyle_bot.git</code></pre>
 * * *
 ## 3. Install required packages
 <pre>
